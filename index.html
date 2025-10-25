@@ -74,7 +74,7 @@ body {
 /* コメント（中央固定） */
 .bubble {
   position:absolute;
-  font-size:26px;
+  font-size:22px;
   font-weight:bold;
   color:#fff8dc;
   text-shadow:2px 2px 5px #000;
@@ -82,6 +82,12 @@ body {
   top:50%;
   transform:translate(-50%, -50%);
   animation: bubbleMove 2s forwards;
+  text-align:center;
+  max-width:85vw;
+  white-space:normal;
+  line-height:1.4;
+  padding:0 5px;
+  word-break:keep-all;
 }
 @keyframes bubbleMove {
   0% {opacity:1; transform:translate(-50%, -50%) scale(1);}
@@ -107,24 +113,46 @@ body {
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  font-size:36px;
+  font-size:28px;
   font-weight:bold;
   color:#fff;
   display:none;
-  max-width:90%;
+  max-width:90vw;
+  text-align:center;
+  line-height:1.5;
   word-wrap:break-word;
   text-shadow:0 0 10px #000;
 }
-#win a { color:#fff; text-decoration:underline; font-size:24px; }
+#win span {
+  font-size:22px;
+  color:#ffeb3b;
+  font-weight:bold;
+  display:block;
+  margin-top:10px;
+  white-space:normal;
+  line-height:1.6;
+}
+#win a { color:#fff; text-decoration:underline; font-size:22px; }
 
 /* iPhoneなどの小さい画面用 */
 @media (max-width: 480px) {
-  #startScreen div { font-size: 20px; padding: 0 10px; }
-  #startBtn { font-size: 20px; padding: 12px 30px; }
-  .bubble { font-size: 18px; }
-  #win { font-size: 24px; }
-  #win span { font-size: 18px; }
-  #win a { font-size: 20px; }
+  #startScreen div { font-size:18px; padding:0 15px; }
+  #startBtn { font-size:20px; padding:12px 30px; }
+  .bubble { 
+    font-size:18px; 
+    max-width:90vw; 
+    line-height:1.5;
+  }
+  #win { 
+    font-size:22px; 
+    line-height:1.6;
+    padding:0 10px;
+  }
+  #win span { 
+    font-size:18px; 
+    line-height:1.6;
+  }
+  #win a { font-size:18px; }
 }
 </style>
 </head>
@@ -139,11 +167,11 @@ body {
 
 <div id="win">
   宝箱破裂！スタバチケットゲット！ 🥳<br>
-  <span style="font-size:24px; color:#ffeb3b; font-weight:bold;">
+  <span>
     みわ、1年間ほんとうにおつかれ！大変よく頑張りました！<br>
     これからも笑顔で、次のステージも楽しんでね✨！
   </span><br><br>
-  <a href="https://gift.starbucks.co.jp/c/17613tZY0J2rqLzTpgIGDIilMYD60Brq" target="_blank">☕ スタバチケットはこちら</a>
+  <a href="https://gift.starbucks.co.jp/c/17613tZY0J2rqLzTpgIGDIilMYD60Brq" target="_blank">☕ スタバチケットはこちら</a><br>
   by ギター侍
 </div>
 
@@ -163,7 +191,7 @@ const boomSound = document.getElementById('boomSound');
 const clearSound = document.getElementById('clearSound');
 const bgm = document.getElementById('bgm');
 
-bgm.volume = 0.15;
+bgm.volume = 0.05;
 tapSound.volume = 0.8;
 boomSound.volume = 1.0;
 clearSound.volume = 0.8;
