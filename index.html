@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宝箱ゲーム🎁</title>
+<style>
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Arial", sans-serif;
+  background: radial-gradient(circle at top, #ffbb88 0%, #ff8855 40%, #553399 100%);
+  height: 100vh;
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+/* スタート画面 */
+#startScreen {
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.5);
+  color:white;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size:28px;
+  backdrop-filter: blur(5px);
+}
+#startBtn {
+  background: linear-gradient(90deg,#ff9f00,#ff6b6b);
+  border:none;
+  padding:15px 40px;
+  font-size:24px;
+  border-radius:50px;
+  margin-top:20px;
+  cursor:pointer;
+  box-shadow:0 4px #c75d00;
+  color:white;
+  font-weight:bold;
+  transition: all 0.2s ease;
+}
+#startBtn:hover{transform:scale(1.1);}
+#startBtn:active{transform:scale(0.98);box-shadow:0 2px #c75d00;}
+
+/* 宝箱 */
+#chestBtn {
+  position:absolute;
+  padding:25px;
+  font-size:64px;
+  cursor:pointer;
+  background:transparent;
+  border:none;
+  left:50%;
+  top:60%;
+  transform:translate(-50%,-50%) scale(1);
+  transition: transform 0.3s ease-out;
+  user-select:none;
+  display:none;
+}
+
+/* タップアニメーション */
+@keyframes tapShrink {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(0.85); }
+  100% { transform: translate(-50%, -50%) scale(1.05); }
+}
+.shrink { animation: tapShrink 0.25s ease-out; }
+
+/* コメント */
+.bubble {
+  position:absolute;
+  font-size:26px;
+  font-weight:bold;
+  color:#fff8dc;
+  text-shadow:2px 2px 5px #000;
+  animation: bubbleMove 7s forwards;
+}
+@keyframes bubbleMove {
+  0% {opacity:1; transform:translateY(0) scale(1);}
+  100% {opacity:0; transform:translateY(-100px) scale(2);}
+}
+
+/* 紙吹雪 */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  opacity: 0.9;
+  animation: confettiFall 3s linear forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* クリア表示 */
+#win {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:36px;
+  font-weight:bold;
+  color:#fff;
+  display:none;
+  max-width:90%;
+  word-wrap:break-word;
+  text-shadow:0 0 10px #000;
+}
+#win a { color:#fff; text-decoration:underline; font-size:24px; }
+
+/* フッター */
+#footer {
+  position:absolute;
+  right:5px;
+  bottom:5px;
+  font-size:12px;
+  color:white;
+  opacity:0.6;
+}
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+  <div>🎮 ゲーム開始！<br>宝箱をタッチして破壊だ！💥</div>
+  <button id="startBtn">スタート！</button>
+</div>
+
+<button id="chestBtn">🎁</button>
+
+<div id="win">
+  宝箱破裂！スタバチケットゲット！ 🥳<br>
+  <span style="font-size:24px; color:#ffeb3b; font-weight:bold;">
+    みわ、1年間ほんとうにおつかれ！大変よく頑張りました！<br>
+    これからも笑顔で、次のステージも楽しんでね✨！
+  </span><br><br>
+  <a href="https://gift.starbucks.co.jp/c/17613tZY0J2rqLzTpgIGDIilMYD60Brq" target="_blank">☕ スタバチケットはこちら</a>
+  by ギター侍
+</div>
+
+<!-- 効果音 -->
+<audio id="tapSound" src="tap.mp3"></audio>
+<audio id="boomSound" src="boom.mp3"></audio>
+<audio id="clearSound" src="clear.mp3"></audio>
+<audio id="bgm" src="bgm2.mp3" loop></audio>
+
+<script>
+const startScreen = document.getElementById('startScreen');
+const startBtn = document.getElementById('startBtn');
+const btn = document.getElementById('chestBtn');
+const win = document.getElementById('win');
+const tapSound = document.getElementById('tapSound');
+const boomSound = document.getElementById('boomSound');
+const clearSound = document.getElementById('clearSound');
+const bgm = document.getElementById('bgm');
+
+// 音量調整
+bgm.volume = 0.15;
+tapSound.volume = 0.8;
+boomSound.volume = 1.0;
+clearSound.volume = 0.8;
+
+let scale = 1;
+let clickCount = 0;
+
+const funnyTexts = [
+  "みわっち、1年間おつかれさま！！本当に頑張ったね！💪",
+  "わぁぁ～、ハードのアイドルありがとう！✨",
+  "5000円のしまねこプリン美味しかったな～！！😋",
+  "ここからはゆっくり休憩だー！体も心もリフレッシュしてね！🌿",
+  "いつでも頼ってな～、頼りがいないけど..笑😊",
+  "体調には気を付けて～、健康第一！元気でいてね！🍀",
+  "一緒に働けてよかったよ、元気もらえた～！ありがとう！",
+  "みわとは楽しい思い出ばかり、感謝！！🎉",
+  "またビリヤードもやろうぜ～、次は負けないからな～笑！🎱",
+  "みわ、お酒はほどほどに！飲みすぎないでね～！🍶",
+  "みわ、本当にありがとう！最高の仲間だ！！",
+  "また、遊ぼうな！！",
+  ""
+];
+const maxClicks = funnyTexts.length;
+let commentIndex = 0;
+
+// コメント作成（画面中心からランダム）
+function createBubble() {
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.textContent = funnyTexts[commentIndex];
+  commentIndex = (commentIndex + 1) % funnyTexts.length;
+
+  const centerX = window.innerWidth/2;
+  const centerY = window.innerHeight/2;
+  const randX = centerX + (Math.random()*200-100);
+  const randY = centerY + (Math.random()*100-50);
+
+  b.style.left = Math.min(Math.max(randX,0),window.innerWidth-150)+'px';
+  b.style.top = Math.min(Math.max(randY,0),window.innerHeight-150)+'px';
+
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),7000);
+}
+
+// 宝箱を少しずつランダム移動
+function moveButtonRandom() {
+  const maxX = window.innerWidth - btn.offsetWidth - 20;
+  const maxY = window.innerHeight - btn.offsetHeight - 20;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+  btn.style.left = x + 'px';
+  btn.style.top = y + 'px';
+}
+
+// 紙吹雪生成
+function createConfetti() {
+  const colors = ["#ff4b4b","#ffd93d","#4bff4b","#4bd8ff","#ff4bff","#ffffff"];
+  for(let i=0;i<150;i++){
+    const c = document.createElement('div');
+    c.className='confetti';
+    c.style.left = Math.random()*100+'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (3+Math.random()*3)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+
+// クリック処理
+function handleClick() {
+  clickCount++;
+  scale += 0.6; // 徐々に大きく
+  btn.style.transform = `translate(-50%, -50%) scale(${scale})`;
+
+  // タップアニメーション（少し縮む）
+  btn.classList.add("shrink");
+  setTimeout(()=>btn.classList.remove("shrink"),150);
+
+  createBubble();
+  moveButtonRandom();
+  tapSound.currentTime = 0;
+  tapSound.play();
+
+  if(clickCount >= maxClicks){
+    btn.remove();
+    boomSound.play();
+    clearSound.play();
+    createConfetti();
+    win.style.display = 'block';
+  }
+}
+
+// ゲーム開始
+startBtn.addEventListener('click',()=>{
+  startScreen.style.display='none';
+  btn.style.display='block';
+  bgm.play();
+});
+
+btn.addEventListener('click',handleClick);
+btn.addEventListener('touchstart',e=>{
+  e.preventDefault();
+  handleClick();
+},{passive:false});
+</script>
+</body>
+</html>
