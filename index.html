@@ -50,8 +50,6 @@ body {
 /* 宝箱 */
 #chestBtn {
   position:absolute;
-  padding:25px;
-  font-size:64px;
   cursor:pointer;
   background:transparent;
   border:none;
@@ -61,6 +59,8 @@ body {
   transition: transform 0.3s ease-out;
   user-select:none;
   display:none;
+  font-size:8vw; /* 初期は画面幅の8% */
+  padding:0;
 }
 
 /* タップアニメーション */
@@ -114,14 +114,14 @@ body {
 }
 #win a { color:#fff; text-decoration:underline; font-size:24px; }
 
-/* フッター */
-#footer {
-  position:absolute;
-  right:5px;
-  bottom:5px;
-  font-size:12px;
-  color:white;
-  opacity:0.6;
+/* iPhoneなどの小さい画面用 */
+@media (max-width: 480px) {
+  #startScreen div { font-size: 20px; padding: 0 10px; }
+  #startBtn { font-size: 20px; padding: 12px 30px; }
+  .bubble { font-size: 18px; }
+  #win { font-size: 24px; }
+  #win span { font-size: 18px; }
+  #win a { font-size: 20px; }
 }
 </style>
 </head>
@@ -233,10 +233,9 @@ function createConfetti() {
 // クリック処理
 function handleClick() {
   clickCount++;
-  scale += 0.6; // 徐々に大きく
+  scale += 0.6;
   btn.style.transform = `translate(-50%, -50%) scale(${scale})`;
 
-  // タップアニメーション（少し縮む）
   btn.classList.add("shrink");
   setTimeout(()=>btn.classList.remove("shrink"),150);
 
@@ -254,10 +253,22 @@ function handleClick() {
   }
 }
 
+// 宝箱サイズ自動調整
+function resizeChest() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  let size = Math.min(vw, vh) * 0.15; // 画面短辺の15%を基本サイズ
+  size = Math.max(40, Math.min(size, 150)); // 最小40px、最大150px
+  btn.style.fontSize = size + 'px';
+}
+
+window.addEventListener('resize', resizeChest);
+
 // ゲーム開始
 startBtn.addEventListener('click',()=>{
   startScreen.style.display='none';
   btn.style.display='block';
+  resizeChest();
   bgm.play();
 });
 
