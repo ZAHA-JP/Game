@@ -59,7 +59,7 @@ body {
   transition: transform 0.3s ease-out;
   user-select:none;
   display:none;
-  font-size:8vw; /* 初期は画面幅の8% */
+  font-size:8vw;
   padding:0;
 }
 
@@ -71,18 +71,21 @@ body {
 }
 .shrink { animation: tapShrink 0.25s ease-out; }
 
-/* コメント */
+/* コメント（中央固定） */
 .bubble {
   position:absolute;
   font-size:26px;
   font-weight:bold;
   color:#fff8dc;
   text-shadow:2px 2px 5px #000;
-  animation: bubbleMove 7s forwards;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  animation: bubbleMove 2s forwards;
 }
 @keyframes bubbleMove {
-  0% {opacity:1; transform:translateY(0) scale(1);}
-  100% {opacity:0; transform:translateY(-100px) scale(2);}
+  0% {opacity:1; transform:translate(-50%, -50%) scale(1);}
+  100% {opacity:0; transform:translate(-50%, -120%) scale(1.5);}
 }
 
 /* 紙吹雪 */
@@ -160,7 +163,6 @@ const boomSound = document.getElementById('boomSound');
 const clearSound = document.getElementById('clearSound');
 const bgm = document.getElementById('bgm');
 
-// 音量調整
 bgm.volume = 0.15;
 tapSound.volume = 0.8;
 boomSound.volume = 1.0;
@@ -187,23 +189,14 @@ const funnyTexts = [
 const maxClicks = funnyTexts.length;
 let commentIndex = 0;
 
-// コメント作成（画面中心からランダム）
+// 中央コメント生成
 function createBubble() {
   const b = document.createElement('div');
   b.className = 'bubble';
   b.textContent = funnyTexts[commentIndex];
   commentIndex = (commentIndex + 1) % funnyTexts.length;
-
-  const centerX = window.innerWidth/2;
-  const centerY = window.innerHeight/2;
-  const randX = centerX + (Math.random()*200-100);
-  const randY = centerY + (Math.random()*100-50);
-
-  b.style.left = Math.min(Math.max(randX,0),window.innerWidth-150)+'px';
-  b.style.top = Math.min(Math.max(randY,0),window.innerHeight-150)+'px';
-
   document.body.appendChild(b);
-  setTimeout(()=>b.remove(),7000);
+  setTimeout(()=>b.remove(),2000);
 }
 
 // 宝箱を少しずつランダム移動
@@ -235,10 +228,8 @@ function handleClick() {
   clickCount++;
   scale += 0.6;
   btn.style.transform = `translate(-50%, -50%) scale(${scale})`;
-
   btn.classList.add("shrink");
   setTimeout(()=>btn.classList.remove("shrink"),150);
-
   createBubble();
   moveButtonRandom();
   tapSound.currentTime = 0;
@@ -257,8 +248,8 @@ function handleClick() {
 function resizeChest() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  let size = Math.min(vw, vh) * 0.15; // 画面短辺の15%を基本サイズ
-  size = Math.max(40, Math.min(size, 150)); // 最小40px、最大150px
+  let size = Math.min(vw, vh) * 0.15;
+  size = Math.max(40, Math.min(size, 150));
   btn.style.fontSize = size + 'px';
 }
 
