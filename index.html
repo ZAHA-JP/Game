@@ -83,8 +83,8 @@ body {
   transform:translate(-50%, -50%);
   animation: bubbleMove 2s forwards;
   text-align:center;
-  max-width:75vw; /* 横幅を調整 */
-  white-space: normal; /* 改行有効 */
+  max-width:75vw; 
+  white-space: normal;
   overflow-wrap: break-word;
   line-height:1.5;
   padding:0 5px;
@@ -209,20 +209,19 @@ let scale = 1;
 let clickCount = 0;
 
 const funnyTexts = [
-  "みわっち、1年\nおつかれさま！💪\nたくさん頑張ったね！",
-  "わぁぁ～、ハードの\nアイドルありがとう！✨\n笑顔も最高！",
-  "5000円の\nしまねこプリン\n美味しかった😋",
-  "ここからは\nゆっくり休憩だー！\n体も心もリフレッシュ🌿",
-  "いつでも\n頼ってな～\n頼りないけど…笑😊",
-  "体調には\n気を付けて～\n元気でいてね🍀",
-  "一緒に\n働けてよかった！\n元気もらえた～！",
-  "みわとは\n楽しい思い出ばかり！\n感謝！！🎉",
-  "またビリヤード\nやろうぜ～\n次は負けない笑🎱",
-  "みわ、お酒は\nほどほどに！\n飲みすぎないで🍶",
-  "みわ、本当に\nありがとう！\n最高の仲間だ！！",
+  "みわっち、1年<br>おつかれさま！💪<br>たくさん頑張ったね！",
+  "わぁぁ～、ハードの<br>アイドルありがとう！✨<br>笑顔も最高！",
+  "5000円の<br>しまねこプリン<br>美味しかった😋",
+  "ここからは<br>ゆっくり休憩だー！<br>体も心もリフレッシュ🌿",
+  "いつでも<br>頼ってな～<br>頼りないけど…笑😊",
+  "体調には<br>気を付けて～<br>元気でいてね🍀",
+  "一緒に<br>働けてよかった！<br>元気もらえた～！",
+  "みわとは<br>楽しい思い出ばかり！<br>感謝！！🎉",
+  "またビリヤード<br>やろうぜ～<br>次は負けない笑🎱",
+  "みわ、お酒は<br>ほどほどに！<br>飲みすぎないで🍶",
+  "みわ、本当に<br>ありがとう！<br>最高の仲間だ！！",
   "また、遊ぼうな！！"
 ];
-
 
 const maxClicks = funnyTexts.length;
 let commentIndex = 0;
@@ -231,7 +230,7 @@ let commentIndex = 0;
 function createBubble() {
   const b = document.createElement('div');
   b.className = 'bubble';
-  b.innerHTML = funnyTexts[commentIndex]; // innerHTMLで<br>を反映
+  b.innerHTML = funnyTexts[commentIndex]; 
   commentIndex = (commentIndex + 1) % funnyTexts.length;
   document.body.appendChild(b);
   setTimeout(()=>b.remove(),2000);
