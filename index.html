@@ -2,18 +2,17 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>宝箱ゲーム🎁</title>
 <style>
 body {
   font-family: "Hiragino Kaku Gothic ProN", "Arial", sans-serif;
   background: radial-gradient(circle at top, #ffbb88 0%, #ff8855 40%, #553399 100%);
-  height: 100dvh; /* ← iPhone対応 */
+  height: 100vh;
   margin: 0;
   text-align: center;
   overflow: hidden;
   touch-action: manipulation;
-  box-sizing: border-box;
 }
 
 /* スタート画面 */
@@ -75,21 +74,20 @@ body {
 /* コメント（中央固定） */
 .bubble {
   position:absolute;
-  font-size:clamp(14px, 4vw, 22px);
+  font-size:22px;
   font-weight:bold;
   color:#fff8dc;
   text-shadow:2px 2px 5px #000;
   left:50%;
   top:50%;
   transform:translate(-50%, -50%);
-  animation:bubbleMove 2s forwards;
+  animation: bubbleMove 2s forwards;
   text-align:center;
-  max-width:85vw;
-  white-space:normal;
-  line-height:1.4;
-  padding:0 8px;
-  box-sizing:border-box;
-  word-break:break-word;
+  max-width:75vw; /* 横幅を調整 */
+  white-space: normal; /* 改行有効 */
+  overflow-wrap: break-word;
+  line-height:1.5;
+  padding:0 5px;
 }
 @keyframes bubbleMove {
   0% {opacity:1; transform:translate(-50%, -50%) scale(1);}
@@ -115,36 +113,46 @@ body {
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  font-size:clamp(18px, 5vw, 28px);
+  font-size:28px;
   font-weight:bold;
   color:#fff;
   display:none;
   max-width:90vw;
   text-align:center;
   line-height:1.5;
-  word-break:break-word;
-  padding:0 10px;
+  word-wrap:break-word;
   text-shadow:0 0 10px #000;
-  box-sizing:border-box;
 }
 #win span {
-  font-size:clamp(14px, 4.5vw, 22px);
+  font-size:22px;
   color:#ffeb3b;
   font-weight:bold;
   display:block;
   margin-top:10px;
+  white-space:normal;
   line-height:1.6;
 }
-#win a {
-  color:#fff;
-  text-decoration:underline;
-  font-size:clamp(14px, 4.5vw, 22px);
-}
+#win a { color:#fff; text-decoration:underline; font-size:22px; }
 
-/* 小さい画面用 */
+/* iPhoneなどの小さい画面用 */
 @media (max-width: 480px) {
   #startScreen div { font-size:18px; padding:0 15px; }
   #startBtn { font-size:20px; padding:12px 30px; }
+  .bubble { 
+    font-size:18px; 
+    max-width:90vw; 
+    line-height:1.5;
+  }
+  #win { 
+    font-size:22px; 
+    line-height:1.6;
+    padding:0 10px;
+  }
+  #win span { 
+    font-size:18px; 
+    line-height:1.6;
+  }
+  #win a { font-size:18px; }
 }
 </style>
 </head>
@@ -160,7 +168,8 @@ body {
 <div id="win">
   宝箱破裂！スタバチケットゲット！ 🥳<br>
   <span>
-    みわ、1年間ほんとうにおつかれ！大変よく頑張りました！<br>
+    みわ、1年間ほんとうにおつかれ！<br>
+    大変よく頑張りました！<br>
     これからも笑顔で、次のステージも楽しんでね✨！
   </span><br><br>
   <a href="https://gift.starbucks.co.jp/c/17613tZY0J2rqLzTpgIGDIilMYD60Brq" target="_blank">☕ スタバチケットはこちら</a><br>
@@ -192,34 +201,34 @@ let scale = 1;
 let clickCount = 0;
 
 const funnyTexts = [
-  "みわっち、1年間おつかれさま！💪",
-  "わぁぁ～、ハードのアイドルありがとう！✨",
-  "5000円のしまねこプリン美味しかったな～！！😋",
-  "ここからはゆっくり休憩だー！体も心もリフレッシュしてね！🌿",
-  "いつでも頼ってな～、頼りがいないけど..笑😊",
-  "体調には気を付けて～、健康第一！元気でいてね！🍀",
-  "一緒に働けてよかったよ、元気もらえた～！ありがとう！",
-  "みわとは楽しい思い出ばかり、感謝！！🎉",
-  "またビリヤードもやろうぜ～、次は負けないからな～笑！🎱",
-  "みわ、お酒はほどほどに！飲みすぎないでね～！🍶",
-  "みわ、本当にありがとう！最高の仲間だ！！",
+  "みわっち、1年間おつかれさま！💪<br>たくさん頑張ったね！",
+  "わぁぁ～、ハードのアイドルありがとう！✨<br>笑顔も最高！",
+  "5000円のしまねこプリン美味しかったな～！！😋<br>また食べに行こうね！",
+  "ここからはゆっくり休憩だー！<br>体も心もリフレッシュしてね🌿",
+  "いつでも頼ってな～<br>頼りがいないけど…笑😊",
+  "体調には気を付けて～<br>健康第一！元気でいてね🍀",
+  "一緒に働けてよかったよ！<br>元気もらえた～！ありがとう！",
+  "みわとは楽しい思い出ばかり！<br>感謝！！🎉",
+  "またビリヤードもやろうぜ～！<br>次は負けないからな～笑🎱",
+  "みわ、お酒はほどほどに！<br>飲みすぎないでね～🍶",
+  "みわ、本当にありがとう！<br>最高の仲間だ！！",
   "また、遊ぼうな！！",
   ""
 ];
 const maxClicks = funnyTexts.length;
 let commentIndex = 0;
 
-// コメント表示
+// 中央コメント生成
 function createBubble() {
   const b = document.createElement('div');
   b.className = 'bubble';
-  b.textContent = funnyTexts[commentIndex];
+  b.innerHTML = funnyTexts[commentIndex]; // innerHTMLで<br>を反映
   commentIndex = (commentIndex + 1) % funnyTexts.length;
   document.body.appendChild(b);
   setTimeout(()=>b.remove(),2000);
 }
 
-// 宝箱ランダム移動
+// 宝箱を少しずつランダム移動
 function moveButtonRandom() {
   const maxX = window.innerWidth - btn.offsetWidth - 20;
   const maxY = window.innerHeight - btn.offsetHeight - 20;
@@ -229,7 +238,7 @@ function moveButtonRandom() {
   btn.style.top = y + 'px';
 }
 
-// 紙吹雪
+// 紙吹雪生成
 function createConfetti() {
   const colors = ["#ff4b4b","#ffd93d","#4bff4b","#4bd8ff","#ff4bff","#ffffff"];
   for(let i=0;i<150;i++){
@@ -264,7 +273,7 @@ function handleClick() {
   }
 }
 
-// 宝箱サイズ調整
+// 宝箱サイズ自動調整
 function resizeChest() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -275,7 +284,7 @@ function resizeChest() {
 
 window.addEventListener('resize', resizeChest);
 
-// スタート
+// ゲーム開始
 startBtn.addEventListener('click',()=>{
   startScreen.style.display='none';
   btn.style.display='block';
