@@ -13,18 +13,19 @@ body {
   margin: 0;
   text-align: center;
   overflow: hidden;
-  touch-action: manipulation; /* ダブルタップズーム防止 */
+  touch-action: manipulation;
 }
 
 /* デバッグ用：画面サイズ可視化 */
 #debugSize {
   position: fixed;
-  top:0; left:0;
-  background: rgba(0,0,0,0.5);
+  top:5px; left:5px;
+  background: rgba(50,50,50,0.8);
   color: #fff;
-  padding: 2px 5px;
+  padding: 2px 6px;
   font-size: 12px;
   z-index: 9999;
+  border-radius: 4px;
 }
 
 /* スタート画面 */
@@ -130,11 +131,11 @@ body {
   color:#fff;
   display:none;
   max-width:95vw;
-  text-align:left; /* 左寄せに変更 */
+  text-align:left;
   line-height:1.5;
   word-wrap:break-word;
   text-shadow:0 0 10px #000;
-  padding:0 15px; /* 左右余白調整 */
+  padding:0 10px; /* 左右少なめ */
 }
 #win span {
   font-size:22px;
