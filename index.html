@@ -83,15 +83,12 @@ body {
   transform:translate(-50%, -50%);
   animation: bubbleMove 2s forwards;
   text-align:center;
-  max-width:75vw; 
-  white-space: normal;
-  overflow-wrap: break-word;
+  max-width:95vw; /* 画面横いっぱいまで */
+  white-space: pre-wrap; /* 自動改行を抑え、<br>だけで改行 */
+  word-break: break-word; /* 長い単語も折り返す */
   line-height:1.5;
   padding:0 5px;
-}
-@keyframes bubbleMove {
-  0% {opacity:1; transform:translate(-50%, -50%) scale(1);}
-  100% {opacity:0; transform:translate(-50%, -120%) scale(1.5);}
+  box-sizing:border-box;
 }
 
 /* 紙吹雪 */
@@ -106,54 +103,6 @@ body {
   0% { transform: translateY(0) rotate(0deg); opacity: 1; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
-
-/* クリア表示 */
-#win {
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  font-size:28px;
-  font-weight:bold;
-  color:#fff;
-  display:none;
-  max-width:90vw;
-  text-align:center;
-  line-height:1.5;
-  word-wrap:break-word;
-  text-shadow:0 0 10px #000;
-}
-#win span {
-  font-size:22px;
-  color:#ffeb3b;
-  font-weight:bold;
-  display:block;
-  margin-top:10px;
-  white-space:normal;
-  line-height:1.6;
-}
-#win a { color:#fff; text-decoration:underline; font-size:22px; }
-
-/* iPhoneなどの小さい画面用 */
-@media (max-width: 480px) {
-  #startScreen div { font-size:18px; padding:0 15px; }
-  #startBtn { font-size:20px; padding:12px 30px; }
-  .bubble { 
-    font-size:18px; 
-    max-width:90vw; 
-    line-height:1.5;
-  }
-  #win { 
-    font-size:22px; 
-    line-height:1.6;
-    padding:0 10px;
-  }
-  #win span { 
-    font-size:18px; 
-    line-height:1.6;
-  }
-  #win a { font-size:18px; }
-}
 </style>
 </head>
 <body>
@@ -166,10 +115,10 @@ body {
 <button id="chestBtn">🎁</button>
 
 <div id="win">
-  宝箱破壊！<br>
+  宝箱破裂！<br>
   スタバチケットゲット！ 🥳<br>
   <span>
-    みわ、1年間  
+    みわ、1年間<br>
     ほんとうにおつかれさま！<br>
     これからも笑顔でいてね✨<br>
     次のステージも楽しんでね！
@@ -179,6 +128,41 @@ body {
   </a><br>
   by ギター侍
 </div>
+
+<style>
+#win {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:28px;
+  font-weight:bold;
+  color:#fff;
+  display:none;
+  max-width:95vw; /* 横幅いっぱいに */
+  text-align:center;
+  line-height:1.5;
+  word-wrap:break-word;
+  text-shadow:0 0 10px #000;
+  padding:0 10px; /* 左右に少し余白 */
+  box-sizing:border-box;
+}
+#win span {
+  font-size:22px;
+  color:#ffeb3b;
+  font-weight:bold;
+  display:block;
+  margin-top:10px;
+  white-space:pre-wrap; /* 自動改行を抑える */
+  line-height:1.6;
+  width:100%; /* 横幅いっぱい */
+}
+#win a {
+  color:#fff;
+  text-decoration:underline;
+  font-size:22px;
+}
+</style>
 
 <!-- 効果音 -->
 <audio id="tapSound" src="tap.mp3"></audio>
