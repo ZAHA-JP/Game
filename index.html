@@ -2,7 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ダブルタップズーム無効化 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>宝箱ゲーム🎁</title>
 <style>
 body {
@@ -12,7 +13,18 @@ body {
   margin: 0;
   text-align: center;
   overflow: hidden;
-  touch-action: manipulation;
+  touch-action: manipulation; /* ダブルタップズーム防止 */
+}
+
+/* デバッグ用：画面サイズ可視化 */
+#debugSize {
+  position: fixed;
+  top:0; left:0;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 2px 5px;
+  font-size: 12px;
+  z-index: 9999;
 }
 
 /* スタート画面 */
@@ -113,48 +125,27 @@ body {
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width: 100%; /* 横幅いっぱい */
   font-size:28px;
   font-weight:bold;
   color:#fff;
   display:none;
-  text-align:left;
+  max-width:95vw;
+  text-align:left; /* 左寄せに変更 */
   line-height:1.5;
   word-wrap:break-word;
   text-shadow:0 0 10px #000;
-  padding:0 20px;
-
-  /* デバッグ用: サイズ可視化 */
-  outline: 2px dashed red;
-  background: rgba(255, 0, 0, 0.05);
+  padding:0 15px; /* 左右余白調整 */
 }
 #win span {
   font-size:22px;
   color:#ffeb3b;
   font-weight:bold;
-  display:block;
+  display:inline;      
   white-space:normal;
   line-height:1.6;
-  text-align:left;
-
-  /* デバッグ用: サイズ可視化 */
-  outline: 1px dotted yellow;
-  background: rgba(255, 255, 0, 0.05);
+  text-align:left;      
 }
 #win a { color:#fff; text-decoration:underline; font-size:22px; }
-
-/* デバッグ用サイズ表示 */
-#debugSize {
-  position:fixed;
-  bottom:10px;
-  left:10px;
-  font-size:14px;
-  color:#fff;
-  background: rgba(0,0,0,0.5);
-  padding:4px 8px;
-  border-radius:4px;
-  z-index:9999;
-}
 
 /* iPhoneなどの小さい画面用 */
 @media (max-width: 480px) {
@@ -162,12 +153,15 @@ body {
   #startBtn { font-size:20px; padding:12px 30px; } 
   .bubble { font-size:18px; max-width:90vw; line-height:1.5; } 
   #win { font-size:20px; line-height:1.5; padding:0 10px; text-align:left; } 
-  #win span { font-size:18px; line-height:1.5; display:block; text-align:left; } 
+  #win span { font-size:18px; line-height:1.5; display:inline; text-align:left; } 
   #win a { font-size:18px; }
 }
 </style>
 </head>
 <body>
+
+<!-- デバッグ用 -->
+<div id="debugSize"></div>
 
 <div id="startScreen">
   <div>🎮 ゲーム開始！<br>宝箱をタッチして破壊だ！💥</div>
@@ -190,9 +184,6 @@ body {
   </a><br>
   by ギター侍
 </div>
-
-<!-- デバッグ用サイズ表示 -->
-<div id="debugSize"></div>
 
 <!-- 効果音 -->
 <audio id="tapSound" src="tap.mp3"></audio>
@@ -271,14 +262,6 @@ function createConfetti() {
   }
 }
 
-// デバッグ用: #winサイズ表示
-function updateDebugSize() {
-  const rect = win.getBoundingClientRect();
-  debugSize.textContent = `#win 幅: ${Math.round(rect.width)}px, 高さ: ${Math.round(rect.height)}px`;
-}
-window.addEventListener('resize', updateDebugSize);
-setInterval(updateDebugSize, 500);
-
 // クリック処理
 function handleClick() {
   clickCount++;
@@ -309,7 +292,15 @@ function resizeChest() {
   btn.style.fontSize = size + 'px';
 }
 
-window.addEventListener('resize', resizeChest);
+// デバッグ：画面サイズ表示
+function updateDebug() {
+  debugSize.textContent = `W: ${window.innerWidth}px H: ${window.innerHeight}px`;
+}
+
+// 初期化
+window.addEventListener('resize', () => { resizeChest(); updateDebug(); });
+window.addEventListener('load', updateDebug);
+updateDebug();
 
 // ゲーム開始
 startBtn.addEventListener('click',()=>{
@@ -319,11 +310,20 @@ startBtn.addEventListener('click',()=>{
   bgm.play();
 });
 
+// クリック/タッチ
 btn.addEventListener('click',handleClick);
 btn.addEventListener('touchstart',e=>{
   e.preventDefault();
   handleClick();
 },{passive:false});
+
+// ダブルタップズーム防止
+let lastTouch = 0;
+document.addEventListener('touchend', function(e) {
+  const now = new Date().getTime();
+  if (now - lastTouch <= 300) { e.preventDefault(); }
+  lastTouch = now;
+}, { passive: false });
 </script>
 </body>
 </html>
