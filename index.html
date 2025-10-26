@@ -15,247 +15,247 @@ body {
   touch-action: manipulation;
 }
 
-/* スタート画面 */
+/* スタート */
 #startScreen {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.5);
-  color:white;
-  display:flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  font-size:28px;
-  backdrop-filter: blur(5px);
-  z-index: 100;
+  position:absolute; inset:0;
+  background:rgba(0,0,0,0.5);
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  color:white; font-size:28px; backdrop-filter:blur(5px); z-index:100;
 }
 #startBtn {
   background: linear-gradient(90deg,#ff9f00,#ff6b6b);
-  border:none; padding:15px 40px; font-size:24px;
-  border-radius:50px; margin-top:20px; cursor:pointer;
-  box-shadow:0 4px #c75d00; color:white; font-weight:bold;
-  transition: all 0.2s ease;
+  border:none; padding:15px 40px; font-size:24px; border-radius:50px;
+  margin-top:20px; cursor:pointer; color:white; font-weight:bold;
+  transition:0.2s; box-shadow:0 4px #c75d00;
 }
-#startBtn:hover{transform:scale(1.1);}
-#startBtn:active{transform:scale(0.98);box-shadow:0 2px #c75d00;}
+#startBtn:active{ transform:scale(0.95); }
 
 /* 宝箱 */
 #chestBtn {
-  position:absolute;
-  cursor:pointer;
-  background:transparent; border:none;
-  left:50%; top:60%;
-  transform:translate(-50%,-50%) scale(1);
-  transition: left 0.3s ease, top 0.3s ease, transform 0.2s ease-out; /* ←移動も滑らか */
-  user-select:none; display:none;
-  font-size:8vw; padding:0;
-  z-index: 20;
-  touch-action: manipulation;          /* モバイルの遅延/ジェスチャ抑制 */
-  -webkit-tap-highlight-color: transparent;
+  position:absolute; cursor:pointer; background:transparent; border:none;
+  left:50%; top:60%; transform:translate(-50%,-50%) scale(1);
+  font-size: 9vw; padding:0;
+  transition:left 0.35s ease, top 0.35s ease, transform 0.2s ease-out, filter 0.4s ease;
+  user-select:none; display:none; touch-action:manipulation;
 }
-
-/* タップ時の小さなバウンド */
 @keyframes tapShrink {
-  0%   { transform: translate(-50%, -50%) scale(1); }
-  50%  { transform: translate(-50%, -50%) scale(0.9); }
-  100% { transform: translate(-50%, -50%) scale(1.05); }
+  0%{transform:translate(-50%, -50%) scale(1);}
+  50%{transform:translate(-50%, -50%) scale(0.92);}
+  100%{transform:translate(-50%, -50%) scale(1.08);}
 }
-.shrink { animation: tapShrink 0.18s ease-out; }
+.shrink { animation: tapShrink .25s ease-out; }
 
-/* コメント（中央固定） */
+/* バブル */
 .bubble {
-  position:absolute;
-  font-size:22px; font-weight:bold;
-  color:#fff8dc; text-shadow:2px 2px 5px #000;
-  left:50%; top:50%; transform:translate(-50%, -50%);
-  animation: bubbleMove 2s forwards;
-  text-align:center; max-width:75vw;
-  white-space: normal; overflow-wrap: break-word;
-  line-height:1.5; padding:0 5px;
-  z-index: 10;
-  pointer-events: none; /* ←重なってもタップを邪魔しない */
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  font-size:22px; font-weight:bold; color:#fffceb; text-shadow:0 0 8px #000;
+  text-align:center; max-width:85vw; line-height:1.5;
+  animation:bubbleMove 6s forwards; z-index:10; pointer-events:none;
 }
 @keyframes bubbleMove {
-  0% {opacity:1; transform:translate(-50%, -50%) scale(1);}
-  100% {opacity:0; transform:translate(-50%, -120%) scale(1.5);}
+  0%   {opacity:1; transform:translate(-50%, -50%) scale(1);}
+  70%  {opacity:1; transform:translate(-50%, -60%) scale(1.2);}
+  100% {opacity:0; transform:translate(-50%, -120%) scale(1.35);}
+}
+
+/* 光ぶわっ */
+.burst {
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%, -50%);
+  width:200px; height:200px;
+  background:radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+  opacity:0; pointer-events:none;
+  animation:burstAnim 0.6s ease-out forwards;
+  z-index:5;
+}
+@keyframes burstAnim {
+  0%{opacity:1; transform:translate(-50%,-50%) scale(0.3);}
+  100%{opacity:0; transform:translate(-50%,-50%) scale(2);}
 }
 
 /* 紙吹雪 */
 .confetti {
-  position: fixed; width: 10px; height: 10px; opacity: 0.9;
-  animation: confettiFall 3s linear forwards;
-  z-index: 5;
-  pointer-events: none; /* ←紙吹雪も邪魔しない */
+  position: fixed; width: 10px; height: 10px; opacity:0.9;
+  animation: confettiFall 3s linear forwards; pointer-events:none;
 }
 @keyframes confettiFall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  0%   { transform:translateY(0) rotate(0deg);}
+  100% { transform:translateY(100vh) rotate(720deg);}
 }
 
-/* クリア表示（縦だけ中央） */
+/* クリア表示 */
 #win {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  font-weight:bold; color:#fff; display:none;
-  line-height:1.5; text-shadow:0 0 10px #000;
-  padding: 25px 10px; font-size:28px;
-  z-index: 90;
+  font-size:26px; color:white; text-shadow:0 0 8px black;
+  display:none; line-height:1.6; padding:0 12px; max-width:100vw; text-align:center;
 }
-#win span { color:#ffeb3b; display:inline; }
+#win span { color:#ffeb3b; }
 #win a { color:#fff; text-decoration:underline; font-size:22px; }
+
+/* ★ 虹色メッセージ */
+.rainbow {
+  font-size: 32px;
+  font-weight: 900;
+  display:block;
+  margin-bottom:12px;
+  animation: rainbowColor 3s infinite linear, rainbowGlow 2s infinite ease-in-out;
+}
+@keyframes rainbowColor {
+  0% { color: #ff6b6b; }
+  20% { color: #ffdd59; }
+  40% { color: #1dd1a1; }
+  60% { color: #54a0ff; }
+  80% { color: #c56cf0; }
+  100% { color: #ff6b6b; }
+}
+@keyframes rainbowGlow {
+  0%   { text-shadow:0 0 4px #fff; transform:scale(1); }
+  50%  { text-shadow:0 0 16px #fff; transform:scale(1.1); }
+  100% { text-shadow:0 0 4px #fff; transform:scale(1); }
+}
 </style>
 </head>
 <body>
 
 <div id="startScreen">
-  <div>🎮 ゲーム開始！<br>宝箱をタッチして破壊だ！💥</div>
+  🎮 宝箱をタッチして壊せ！💥
   <button id="startBtn">スタート！</button>
 </div>
 
 <button id="chestBtn">🎁</button>
 
 <div id="win">
-  宝箱破裂！<br>
-  スタバチケットゲット！ 🥳<br>
-  <span>
-    みわ、1年間ほんとうに<br>おつかれさま！<br>
-    これからも笑顔でいてね✨<br>
-    次のステージも楽しんでね！
-  </span><br><br>
-  <a href="https://gift.starbucks.co.jp/c/17613tZY0J2rqLzTpgIGDIilMYD60Brq" target="_blank">
-    ☕ スタバチケットはこちら
-  </a><br>
+  <span class="rainbow">🌈 みわ、おつかれ！！ 🌈</span>
+  宝箱破壊<br>やったね♪🥳<br>
+  <span>スタバチケットゲット！！<br>おめでとう！</span><br><br>
+  <a id="openGift" href="https://gift.starbucks.co.jp/c/17613tZY0J2rqLzTpgIGDIilMYD60Brq" target="_blank">☕ チケットを取りに行く。こちら</a><br><br>
   by ギター侍
 </div>
 
-<!-- 効果音 -->
-<audio id="tapSound" src="tap.mp3"></audio>
+<audio id="tapSound"  src="tap.mp3"></audio>
 <audio id="boomSound" src="boom.mp3"></audio>
 <audio id="clearSound" src="clear.mp3"></audio>
-<audio id="bgm" src="bgm2.mp3" loop></audio>
+<audio id="bgm"       src="bgm2.mp3" loop></audio>
 
 <script>
-const startScreen = document.getElementById('startScreen');
-const startBtn     = document.getElementById('startBtn');
-const btn          = document.getElementById('chestBtn');
-const win          = document.getElementById('win');
-const tapSound     = document.getElementById('tapSound');
-const boomSound    = document.getElementById('boomSound');
-const clearSound   = document.getElementById('clearSound');
-const bgm          = document.getElementById('bgm');
-
-bgm.volume = 0.05;
-tapSound.volume = 0.8;
-boomSound.volume = 1.0;
-clearSound.volume = 0.8;
-
-let scale = 1;
-let clickCount = 0;
-let canClick = true; // クリック漏れ防止用クールタイム
-
-const funnyTexts = [
-  "みわっち、1年<br>おつかれさま！💪<br>たくさん頑張ったね！",
-  "わぁぁ～、ハードの<br>アイドルありがとう！✨<br>笑顔も最高！",
-  "5000円の<br>しまねこプリン<br>美味しかった😋",
-  "ここからは<br>ゆっくり休憩だー！<br>体も心もリフレッシュ🌿",
-  "いつでも<br>頼ってな～<br>頼りないけど…笑😊",
-  "体調には<br>気を付けて～<br>元気でいてね🍀",
-  "一緒に<br>働けてよかった！<br>元気もらえた～！",
-  "みわとは<br>楽しい思い出ばかり！<br>感謝！！🎉",
-  "またビリヤード<br>やろうぜ～<br>次は負けない笑🎱",
-  "みわ、お酒は<br>ほどほどに！<br>飲みすぎないで🍶",
-  "みわ、本当に<br>ありがとう！<br>最,高の仲間だ！！",
-  "また、遊ぼうな！！",
+const btn = chestBtn;
+const funnyTexts=[
+  "みわっち！<br>ハイサイ！💪",
+  "ここからは<br>ゆっくり期間<br>だな！🌿",
+  "いつでも<br>頼ってな～😊",
+  "体調には<br>気を付けて！<br>元気でね～！🍀",
+  "顔も笑顔も<br>宇宙一！",
+  "黄金世代<br>卒業だな！笑",
+  "一緒に働けて<br>よかった！<br>元気もらえた！",
+  "楽しい思い出<br>いっぱいだった！🎉",
+  "5000円の<br>しまねこプリン<br>覚えてるよ😋",
+  "またビリヤード<br>やろうな！<br>次は勝つぞ～🎱",
+  "お酒飲みすぎ<br>注意な🍶笑",
+  "最高の友達！<br>ありがとうね！",
+  "また、遊ぼう！！",
+  "おつかれさまでした。",
   ""
 ];
-const maxClicks = funnyTexts.length;
-let commentIndex = 0;
 
-// 中央コメント生成
-function createBubble() {
-  const b = document.createElement('div');
-  b.className = 'bubble';
-  b.innerHTML = funnyTexts[commentIndex];
-  commentIndex = (commentIndex + 1) % funnyTexts.length;
-  document.body.appendChild(b);
-  setTimeout(()=>b.remove(), 2000);
-}
+let index=0, clickCount=0, scale=1;
 
-// 画面内に収まるようにランダム移動（中心基準）
-function moveButtonRandom() {
-  const chestW = btn.offsetWidth;
-  const chestH = btn.offsetHeight;
-  const maxX = window.innerWidth  - chestW;
-  const maxY = window.innerHeight - chestH;
-  const x = Math.random() * maxX + chestW/2;
-  const y = Math.random() * maxY + chestH/2;
-  btn.style.left = x + 'px';
-  btn.style.top  = y + 'px';
-}
-
-// クリック処理（pointerdownに一本化）
-function handleClick() {
-  if (!canClick) return;
-  canClick = true; // すぐ反応させたい場合は true のままでもOK
-  // ※もし誤連打が辛ければ 150〜220ms だけロックする
-  // canClick = false; setTimeout(()=>canClick = true, 200);
-
-  clickCount++;
-  scale = Math.min(scale + 0.2, 1.6); // 拡大控えめ＆上限
-  btn.style.transform = `translate(-50%, -50%) scale(${scale})`;
-
-  btn.classList.add("shrink");
-  setTimeout(()=>btn.classList.remove("shrink"), 180);
-
-  createBubble();
-  moveButtonRandom();
-
-  tapSound.currentTime = 0;
-  tapSound.play();
-
-  if (clickCount >= maxClicks) {
-    btn.remove();
-    boomSound.play();
-    clearSound.play();
-    createConfetti();
-    win.style.display = 'block';
+/* バブル再利用 */
+let bubbleEl=null, bubbleTimer=null;
+function showBubble(text){
+  if(!bubbleEl){
+    bubbleEl=document.createElement("div");
+    bubbleEl.className="bubble";
+    document.body.appendChild(bubbleEl);
   }
+  bubbleEl.innerHTML=text;
+  bubbleEl.style.animation="none"; bubbleEl.offsetHeight;
+  bubbleEl.style.animation="bubbleMove 6s forwards";
+
+  clearTimeout(bubbleTimer);
+  bubbleTimer=setTimeout(()=>{ bubbleEl.remove(); bubbleEl=null; },9000);
 }
 
-// 紙吹雪生成
-function createConfetti() {
-  const colors = ["#ff4b4b","#ffd93d","#4bff4b","#4bd8ff","#ff4bff","#ffffff"];
+/* 光ぶわっ */
+function burst(){
+  const b=document.createElement("div");
+  b.className="burst";
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),600);
+}
+
+/* 紙吹雪 */
+function confetti(){
+  const colors=["#ff4b4b","#ffd93d","#4bff4b","#4bd8ff","#ff4bff","#ffffff"];
   for(let i=0;i<150;i++){
-    const c = document.createElement('div');
-    c.className='confetti';
-    c.style.left = Math.random()*100+'vw';
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.animationDuration = (3+Math.random()*3)+'s';
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration=(3+Math.random()*3)+"s";
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),5000);
   }
 }
 
-// 宝箱サイズ自動調整
-function resizeChest() {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  let size = Math.min(vw, vh) * 0.15;
-  size = Math.max(40, Math.min(size, 150));
-  btn.style.fontSize = size + 'px';
+/* 中央禁止ゾーン */
+function move(){
+  const w=btn.offsetWidth,h=btn.offsetHeight;
+  const maxX=innerWidth-w, maxY=innerHeight-h;
+  const fx1=innerWidth*0.3, fx2=innerWidth*0.7;
+  const fy1=innerHeight*0.3, fy2=innerHeight*0.7;
+  let x,y,c=0;
+  do{
+    x=Math.random()*maxX;
+    y=Math.random()*maxY;
+    c++;
+  }while(x>fx1&&x<fx2&&y>fy1&&y<fy2&&c<50);
+  btn.style.left=x+"px"; btn.style.top=y+"px";
 }
 
-window.addEventListener('resize', resizeChest);
+/* 連打抑制 */
+let lastTap=0,TAP_CD=150;
 
-// ゲーム開始
-startBtn.addEventListener('click',()=>{
-  startScreen.style.display='none';
-  btn.style.display='block';
-  resizeChest();
-  bgm.play();
-});
+function tap(){
+  const now=performance.now();
+  if(now-lastTap<TAP_CD) return;
+  lastTap=now;
 
-// クリック/タッチ → pointerdownに一本化（クリック漏れ減）
-btn.addEventListener('pointerdown', (e)=>{
-  e.preventDefault();
-  handleClick();
-});
+  clickCount++;
+  scale=Math.min(scale+0.15,1.8);
+  btn.style.transform=`translate(-50%,-50%) scale(${scale})`;
+
+  btn.classList.add("shrink");
+  setTimeout(()=>btn.classList.remove("shrink"),180);
+
+  burst();
+
+  const b=1+clickCount*0.08, s=1+clickCount*0.05;
+  btn.style.filter=`brightness(${Math.min(b,1.6)}) saturate(${Math.min(s,1.4)})`;
+
+  showBubble(funnyTexts[index]);
+  index=(index+1)%funnyTexts.length;
+
+  move();
+
+  tapSound.playbackRate=1+Math.min(clickCount/funnyTexts.length,1)*0.25;
+  tapSound.currentTime=0; tapSound.play();
+
+  if(clickCount>=funnyTexts.length){
+    btn.remove();
+    boomSound.play(); clearSound.play();
+    confetti();
+    win.style.display="block";
+  }
+}
+
+/* 音量調整 */
+bgm.volume=0.12; tapSound.volume=0.35; boomSound.volume=0.5; clearSound.volume=0.4;
+
+/* スタバ → BGM停止 */
+openGift.onclick=()=>{ bgm.pause(); };
+
+/* Start */
+startBtn.onclick=()=>{ startScreen.remove(); btn.style.display="block"; bgm.play(); move(); }
+btn.addEventListener("pointerdown",e=>{e.preventDefault(); tap();},{passive:false});
 </script>
 </body>
 </html>
