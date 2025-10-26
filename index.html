@@ -134,47 +134,15 @@ body {
 }
 #win a { color:#fff; text-decoration:underline; font-size:22px; }
 
-/* iPhoneなどの小さい画面用 */
+/* iPhoneなどの小さい画面用 */ 
 @media (max-width: 480px) {
-  /* スタート画面 */
-  #startScreen div { 
-    font-size:18px; 
-    padding:0 15px; 
+  #startScreen div { font-size:18px; padding:0 15px; } 
+  #startBtn { font-size:20px; padding:12px 30px; } 
+  .bubble { font-size:18px; max-width:90vw; line-height:1.5; } 
+  #win { font-size:22px; line-height:1.6; padding:0 10px; } 
+  #win span { font-size:18px; line-height:1.6; } 
+  #win a { font-size:18px; 
   }
-  #startBtn { 
-    font-size:20px; 
-    padding:12px 30px; 
-  }
-
-  /* 宝箱タップコメント */
-  .bubble { 
-    font-size:18px; 
-    max-width:95vw;        /* 画面幅ほぼいっぱい */
-    line-height:1.5;       /* 行間広めで読みやすく */
-    white-space: pre-wrap; /* <br>や改行をそのまま反映 */
-    word-break: break-word; /* 単語の途中で折り返しOK */
-    padding:0 5px;
-  }
-
-  /* クリア画面 */
-  #win { 
-    font-size:22px; 
-    line-height:1.6;
-    padding:0 5px;         /* 端まで文字がつかないよう調整 */
-    white-space: pre-wrap;  /* 改行をそのまま表示 */
-    word-break: break-word; /* 長い文章も折り返す */
-  }
-  #win span { 
-    font-size:18px; 
-    line-height:1.6;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  #win a { 
-    font-size:18px; 
-    word-break: break-word; /* リンクも折り返す */
-  }
-}
 </style>
 </head>
 <body>
