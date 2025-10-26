@@ -2,8 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<!-- ダブルタップズーム無効化 -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>宝箱ゲーム🎁</title>
 <style>
 body {
@@ -14,18 +13,6 @@ body {
   text-align: center;
   overflow: hidden;
   touch-action: manipulation;
-}
-
-/* デバッグ用：画面サイズ可視化 */
-#debugSize {
-  position: fixed;
-  top:5px; left:5px;
-  background: rgba(50,50,50,0.8);
-  color: #fff;
-  padding: 2px 6px;
-  font-size: 12px;
-  z-index: 9999;
-  border-radius: 4px;
 }
 
 /* スタート画面 */
@@ -126,7 +113,6 @@ body {
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  font-size:28px;
   font-weight:bold;
   color:#fff;
   display:none;
@@ -135,16 +121,14 @@ body {
   line-height:1.5;
   word-wrap:break-word;
   text-shadow:0 0 10px #000;
-  padding:0 2px; /* 左右少なめ */
+  border: 2px dashed red;      /* デバッグ可視化 */
+  background: rgba(255,0,0,0.05); /* デバッグ透過 */
+  padding: 0 10px;
+  font-size:28px;
 }
 #win span {
-  font-size:22px;
   color:#ffeb3b;
-  font-weight:bold;
-  display:inline;      
-  white-space:normal;
-  line-height:1.6;
-  text-align:left;      
+  display:inline;
 }
 #win a { color:#fff; text-decoration:underline; font-size:22px; }
 
@@ -157,12 +141,23 @@ body {
   #win span { font-size:18px; line-height:1.5; display:inline; text-align:left; } 
   #win a { font-size:18px; }
 }
+
+/* デバッグパネル */
+#debugWin {
+  position:fixed;
+  top:5px;
+  right:5px;
+  background: rgba(0,0,0,0.7);
+  color:#fff;
+  padding:10px;
+  z-index:9999;
+  font-size:12px;
+  border-radius:5px;
+}
+#debugWin input[type=range]{ width:80px; }
 </style>
 </head>
 <body>
-
-<!-- デバッグ用 -->
-<div id="debugSize"></div>
 
 <div id="startScreen">
   <div>🎮 ゲーム開始！<br>宝箱をタッチして破壊だ！💥</div>
@@ -186,6 +181,13 @@ body {
   by ギター侍
 </div>
 
+<!-- デバッグパネル -->
+<div id="debugWin">
+  <div>横余白: <input type="range" id="paddingX" min="0" max="50" value="10"> <span id="valPaddingX">10</span>px</div>
+  <div>縦余白: <input type="range" id="paddingY" min="0" max="50" value="0"> <span id="valPaddingY">0</span>px</div>
+  <div>文字サイズ: <input type="range" id="fontSize" min="12" max="40" value="28"> <span id="valFontSize">28</span>px</div>
+</div>
+
 <!-- 効果音 -->
 <audio id="tapSound" src="tap.mp3"></audio>
 <audio id="boomSound" src="boom.mp3"></audio>
@@ -201,7 +203,6 @@ const tapSound = document.getElementById('tapSound');
 const boomSound = document.getElementById('boomSound');
 const clearSound = document.getElementById('clearSound');
 const bgm = document.getElementById('bgm');
-const debugSize = document.getElementById('debugSize');
 
 bgm.volume = 0.05;
 tapSound.volume = 0.8;
@@ -293,15 +294,7 @@ function resizeChest() {
   btn.style.fontSize = size + 'px';
 }
 
-// デバッグ：画面サイズ表示
-function updateDebug() {
-  debugSize.textContent = `W: ${window.innerWidth}px H: ${window.innerHeight}px`;
-}
-
-// 初期化
-window.addEventListener('resize', () => { resizeChest(); updateDebug(); });
-window.addEventListener('load', updateDebug);
-updateDebug();
+window.addEventListener('resize', resizeChest);
 
 // ゲーム開始
 startBtn.addEventListener('click',()=>{
@@ -311,20 +304,33 @@ startBtn.addEventListener('click',()=>{
   bgm.play();
 });
 
-// クリック/タッチ
 btn.addEventListener('click',handleClick);
 btn.addEventListener('touchstart',e=>{
   e.preventDefault();
   handleClick();
 },{passive:false});
 
-// ダブルタップズーム防止
-let lastTouch = 0;
-document.addEventListener('touchend', function(e) {
-  const now = new Date().getTime();
-  if (now - lastTouch <= 300) { e.preventDefault(); }
-  lastTouch = now;
-}, { passive: false });
+// デバッグ用スライダー制御
+const paddingX = document.getElementById('paddingX');
+const paddingY = document.getElementById('paddingY');
+const fontSize = document.getElementById('fontSize');
+const valPaddingX = document.getElementById('valPaddingX');
+const valPaddingY = document.getElementById('valPaddingY');
+const valFontSize = document.getElementById('valFontSize');
+
+function updateWinStyle() {
+  win.style.paddingLeft = win.style.paddingRight = paddingX.value + 'px';
+  win.style.paddingTop = win.style.paddingBottom = paddingY.value + 'px';
+  win.style.fontSize = fontSize.value + 'px';
+  valPaddingX.textContent = paddingX.value;
+  valPaddingY.textContent = paddingY.value;
+  valFontSize.textContent = fontSize.value;
+}
+
+paddingX.addEventListener('input', updateWinStyle);
+paddingY.addEventListener('input', updateWinStyle);
+fontSize.addEventListener('input', updateWinStyle);
+updateWinStyle();
 </script>
 </body>
 </html>
